@@ -1,10 +1,10 @@
 spring:
   datasource:
-    url: jdbc:postgresql://ep-weathered-math-909876.us-east-2.aws.neon.tech/sccs
+    url: jdbc:postgresql://ep-weathered-math-909876.us-east-2.aws.neon.tech/apartmentsdb
     username: ssoslickk
     password: H94xCKgdQjuS
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: validate
     show-sql: true
