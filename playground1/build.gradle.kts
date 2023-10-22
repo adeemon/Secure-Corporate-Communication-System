@@ -29,6 +29,7 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
     implementation("org.springframework.boot:spring-boot-starter-validation")
     implementation("org.springframework.boot:spring-boot-starter-web")
+    implementation("org.springframework.boot:spring-boot-configuration-processor:3.1.4")
     implementation("org.springframework.boot:spring-boot-starter-websocket")
 //	implementation("org.liquibase:liquibase-core")
     compileOnly("org.projectlombok:lombok")

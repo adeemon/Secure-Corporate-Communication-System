@@ -1,11 +1,17 @@
 package ru.sccs.playground1.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.sccs.playground1.entity.User;
+import org.springframework.stereotype.Repository;
+import ru.sccs.playground1.domain.user.Role;
+import ru.sccs.playground1.domain.user.User;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Integer> {
-    Optional<User> findByEmail(String email);
-
-}
+//@Repository
+//public interface UserRepository extends JpaRepository<User, Long> {
+//
+//    Optional<User> findByUsername(String username);
+//
+////    void insertUserRole(Long userId, Role role);
+//
+//}
