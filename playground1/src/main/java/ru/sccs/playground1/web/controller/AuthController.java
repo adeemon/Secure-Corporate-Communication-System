@@ -1,6 +1,7 @@
 package ru.sccs.playground1.web.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +20,7 @@ import ru.sccs.playground1.web.mapper.UserMapper;
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @Validated
+@Log4j2
 public class AuthController {
 
     private final AuthService authService;
@@ -33,6 +35,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public UserDTO register(@Validated(OnCreate.class) @RequestBody UserDTO userDTO) {
+        log.info("register called");
         User user = userMapper.toEntity(userDTO);
         User createdUser = userService.create(user);
         return userMapper.toDto(createdUser);
