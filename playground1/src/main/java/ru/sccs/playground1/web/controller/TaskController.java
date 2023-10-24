@@ -1,28 +1,69 @@
 package ru.sccs.playground1.web.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.web.bind.annotation.*;
+import ru.sccs.playground1.domain.task.ChatMessage;
+import ru.sccs.playground1.domain.task.Task;
+import ru.sccs.playground1.domain.user.User;
+import ru.sccs.playground1.repository.TaskRepository;
+import ru.sccs.playground1.repository.UserRepository;
 import ru.sccs.playground1.service.TaskService;
-import ru.sccs.playground1.web.dto.task.TaskDTO;
+import ru.sccs.playground1.web.dto.task.TaskCreationDTO;
 import ru.sccs.playground1.web.mapper.TaskMapper;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/v1/tasks")
 @RequiredArgsConstructor
-@Validated
+@Log4j2
+//@Validated
 public class TaskController {
 
     private final TaskService taskService;
 
     private final TaskMapper taskMapper;
 
-//    @GetMapping("/{id}")
-//    public TaskDTO getById(@PathVariable Long id) {
-//
-//    }
+    private final TaskRepository taskRepository;
+
+    private final UserRepository userRepository;
+
+    @GetMapping
+    public List<Task> getAllTasks() {
+        return taskRepository.findAll();
+    }
+
+    @GetMapping("/{taskId}")
+    public Task getTaskById(@PathVariable Long taskId) {
+        Task task = taskRepository.findById(taskId).get();
+        log.info(task.getAssignees()
+                .stream()
+                .map(User::toString)
+                .collect(Collectors.toList())
+        );
+        return task;
+    }
+
+    @PostMapping("/createTask")
+    public Task createTask(@RequestBody TaskCreationDTO taskCreationDTO) {
+        return taskRepository.save(taskMapper.toEntity(taskCreationDTO));
+    }
+
+    @PutMapping("/{taskId}/addAssignee/{userId}")
+    public Task addAssignee(@PathVariable Long taskId, @PathVariable Long userId) {
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("no task with id " + taskId));
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("no user with id " + userId));
+        task.getAssignees().add(user);
+        return taskRepository.save(task);
+    }
+
+    @PutMapping("/{taskId}/addMessage")
+    public Task addMessage(@PathVariable Long taskId, @RequestBody ChatMessage chatMessage) {
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("no task with id " + taskId));
+        task.getChatMessages().add(chatMessage);
+        return taskRepository.save(task);
+    }
 
 }

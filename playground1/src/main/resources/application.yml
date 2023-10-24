@@ -5,24 +5,24 @@ spring:
     password: H94xCKgdQjuS
     driver-class-name: org.postgresql.Driver
 
-#  jpa:
-#    hibernate:
-#      ddl-auto: create-drop
-#    show-sql: true
-#    properties:
-#      hibernate:
-#        format_sql: true
-#    database: postgresql
-#    database-platform: org.hibernate.dialect.PostgreSQLDialect
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 
-  sql:
-    init:
-      mode: always
-      continue-on-error: false
+#  sql:
+#    init:
+#      mode: always
+#      continue-on-error: false
 #      data-locations: classpath:demo_data.sql
 
-security:
-  jwt:
-    secret: YXdmYWd3Z3J3YnN0bnNybmVyaGFlcmhlcmhhZTVqNXFBRVI1RUpOVDY=
-    access: 3600000
-    refresh: 2592000000
+#security:
+#  jwt:
+#    secret: YXdmYWd3Z3J3YnN0bnNybmVyaGFlcmhlcmhhZTVqNXFBRVI1RUpOVDY=
+#    access: 3600000
+#    refresh: 2592000000
