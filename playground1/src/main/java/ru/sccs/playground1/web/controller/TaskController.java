@@ -31,11 +31,13 @@ public class TaskController {
     private final UserRepository userRepository;
 
     @GetMapping
+    @CrossOrigin(origins = "*")
     public List<Task> getAllTasks() {
         return taskRepository.findAll();
     }
 
     @GetMapping("/{taskId}")
+    @CrossOrigin(origins = "*")
     public Task getTaskById(@PathVariable Long taskId) {
         Task task = taskRepository.findById(taskId).get();
         log.info(task.getAssignees()
@@ -47,11 +49,13 @@ public class TaskController {
     }
 
     @PostMapping("/createTask")
+    @CrossOrigin(origins = "*")
     public Task createTask(@RequestBody TaskCreationDTO taskCreationDTO) {
         return taskRepository.save(taskMapper.toEntity(taskCreationDTO));
     }
 
     @PutMapping("/{taskId}/addAssignee/{userId}")
+    @CrossOrigin(origins = "*")
     public Task addAssignee(@PathVariable Long taskId, @PathVariable Long userId) {
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("no task with id " + taskId));
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("no user with id " + userId));
@@ -60,6 +64,7 @@ public class TaskController {
     }
 
     @PutMapping("/{taskId}/addMessage")
+    @CrossOrigin(origins = "*")
     public Task addMessage(@PathVariable Long taskId, @RequestBody ChatMessage chatMessage) {
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("no task with id " + taskId));
         task.getChatMessages().add(chatMessage);
