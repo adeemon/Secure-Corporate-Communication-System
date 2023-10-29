@@ -1,17 +1,14 @@
 package ru.sccs.playground1.web.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import ru.sccs.playground1.domain.user.User;
 import ru.sccs.playground1.repository.UserRepository;
 import ru.sccs.playground1.web.dto.user.UserCreationDTO;
 import ru.sccs.playground1.web.mapper.UserMapper;
 
 @RestController
-@RequestMapping("/api/v1/tasks")
+@RequestMapping("/api/v1/user")
 @RequiredArgsConstructor
 public class UserController {
 
@@ -22,6 +19,11 @@ public class UserController {
     @PostMapping("/createUser")
     public User createUser(@RequestBody UserCreationDTO userCreationDTO) {
         return userRepository.save(userMapper.toEntity(userCreationDTO));
+    }
+
+    @GetMapping("/test")
+    public String getTest() {
+        return "test";
     }
 
 }

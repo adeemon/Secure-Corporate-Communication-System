@@ -15,6 +15,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import ru.sccs.playground1.service.impl.SystemUserDetailsServiceImpl;
 
 @Configuration
@@ -26,6 +27,9 @@ public class SecurityConfig {
 //    private final JwtTokenProvider jwtTokenProvider;
 
 //    private final SystemUserDetailsServiceImpl systemUserDetailsService;
+
+    private final JWTFilter jwtFilter;
+//    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -46,8 +50,13 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("api/v1/user/**").hasAuthority("USER"))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("api/v1/user/**").hasAuthority("USER"))
+                .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/auth/**", "/swagger-ui/**").permitAll())
-                .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated());
+                .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 //                .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer
 //                        .authenticationEntryPoint(((request, response, authException) -> {
 //                            response.setStatus(HttpStatus.UNAUTHORIZED.value());
