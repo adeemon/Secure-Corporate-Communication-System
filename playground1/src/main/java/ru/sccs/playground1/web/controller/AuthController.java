@@ -21,11 +21,14 @@ import ru.sccs.playground1.web.dto.validation.OnCreate;
 import ru.sccs.playground1.web.mapper.UserMapper;
 import ru.sccs.playground1.web.security.JWTUtil;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
 @Validated
 @Log4j2
+@CrossOrigin(origins = "*")
 public class AuthController {
 
 //    private final AuthService authService;
@@ -37,19 +40,22 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
-    @GetMapping("/login")
-    public String login(/*@Validated @RequestBody JwtRequest loginRequest*/
+    @PostMapping("/login")
+//    @CrossOrigin(origins = "*")
+    public Map<String, String> login(/*@Validated @RequestBody JwtRequest loginRequest*/
     @RequestBody UserCreationDTO userCreationDTO) {
 //        return authService.login(loginRequest);
         log.info(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userCreationDTO.getUsername(), userCreationDTO.getPassword()));
         log.info(authenticate);
-        return jwtUtil.generateToken(userCreationDTO.getUsername());
+        return Map.of("token", jwtUtil.generateToken(userCreationDTO.getUsername()));
 //        return new JwtResponse();
     }
 
     @PostMapping("/register")
+//    @CrossOrigin(origins = "*")
     public User register(@RequestBody UserCreationDTO userCreationDTO) {
+        log.info(userCreationDTO);
         userCreationDTO.setPassword(passwordEncoder.encode(userCreationDTO.getPassword()));
         return userRepository.save(userMapper.toEntity(userCreationDTO));
 //        return jwtUtil.generateToken(userCreationDTO.getUsername());

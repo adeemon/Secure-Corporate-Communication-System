@@ -1,11 +1,15 @@
 import logo from './logo.svg';
 import './App.css';
-import NewOne from './componetns/NewOne';
+import RegistrationForm from './componetns/RegistrationForm';
+import LoginForm from './componetns/LoginForm';
+import AppRouter from './componetns/AppRouter';
+import { BrowserRouter } from 'react-router-dom';
+import Tasks from './componetns/Tasks';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
+      {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
@@ -18,8 +22,13 @@ function App() {
         >
           Learn React
         </a>
-      </header>
-      <NewOne/>
+      </header> */}
+      {/* <BrowserRouter> */}
+      {/* <AppRouter/> */}
+      {/* </BrowserRouter> */}
+      <RegistrationForm />
+      <LoginForm />
+      <Tasks />
     </div>
   );
 }

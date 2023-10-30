@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/tasks")
 @RequiredArgsConstructor
 @Log4j2
+@CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "*")
 //@Validated
 public class TaskController {
 
@@ -33,14 +34,13 @@ public class TaskController {
     private final UserRepository userRepository;
 
     @GetMapping
-    @CrossOrigin(origins = "*")
     public List<Task> getAllTasks() {
         log.info(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         return taskRepository.findAll();
     }
 
     @GetMapping("/{taskId}")
-    @CrossOrigin(origins = "*")
+//    @CrossOrigin(origins = "http://localhost:8080")
     public Task getTaskById(@PathVariable Long taskId) {
         Task task = taskRepository.findById(taskId).get();
         log.info(task.getAssignees()
@@ -52,13 +52,13 @@ public class TaskController {
     }
 
     @PostMapping("/createTask")
-    @CrossOrigin(origins = "*")
+//    @CrossOrigin(origins = "http://localhost:8080")
     public Task createTask(@RequestBody TaskCreationDTO taskCreationDTO) {
         return taskRepository.save(taskMapper.toEntity(taskCreationDTO));
     }
 
     @PutMapping("/{taskId}/addAssignee/{userId}")
-    @CrossOrigin(origins = "*")
+//    @CrossOrigin(origins = "http://localhost:8080")
     public Task addAssignee(@PathVariable Long taskId, @PathVariable Long userId) {
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("no task with id " + taskId));
         User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("no user with id " + userId));
@@ -67,7 +67,7 @@ public class TaskController {
     }
 
     @PutMapping("/{taskId}/addMessage")
-    @CrossOrigin(origins = "*")
+//    @CrossOrigin(origins = "http://localhost:8080")
     public Task addMessage(@PathVariable Long taskId, @RequestBody ChatMessage chatMessage) {
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("no task with id " + taskId));
         task.getChatMessages().add(chatMessage);

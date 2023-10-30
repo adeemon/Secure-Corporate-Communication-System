@@ -45,14 +45,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("api/v1/user/**").hasAuthority("USER"))
+                        .requestMatchers("api/v1/user/**").hasAuthority("ROLE_USER"))
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("api/v1/user/**").hasAuthority("USER"))
+                        .requestMatchers("api/v1/admin/**").hasAuthority("ROLE_ADMIN"))
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/api/v1/auth/**", "/swagger-ui/**").permitAll())
                 .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
