@@ -1,3 +1,9 @@
+server:
+  servlet:
+    session:
+      cookie:
+        same-site: strict
+
 spring:
   datasource:
     url: jdbc:postgresql://ep-weathered-math-909876.us-east-2.aws.neon.tech/sccs

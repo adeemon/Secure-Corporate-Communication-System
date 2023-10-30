@@ -45,9 +45,12 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/**").permitAll())
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("api/v1/user/**").hasAuthority("ROLE_USER"))
                 .authorizeHttpRequests(authorize -> authorize

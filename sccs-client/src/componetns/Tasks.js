@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { useState } from "react"
+import { useState } from "react";
 
 const Tasks = () => {
     // let [tasks, setTasks] = useState();
@@ -9,6 +9,9 @@ const Tasks = () => {
     //         .then(data => {console.log(data); setTasks(JSON.stringify(data))}).catch((error) => { console.log(error) })
     // }, [])
 
+    // const wsConnection = await new WebSocket("ws://localhost:8080/ws") 
+    // console.log(wsConnection)
+
     let [tasks, setTasks] = useState();
 
     const handleSubmit = async (e) => {
@@ -16,14 +19,14 @@ const Tasks = () => {
         if (!e.isDefaultPrevented()) {
             e.returnValue = false;
         }
-        let response = await fetch("http://localhost:8080/api/v1/tasks", {
+        let response = await fetch("http://localhost/api/v1/tasks", {
             headers: {
                 'Content-Type': 'application/json',
-                // 'Authorization': 'Bearer ' + localStorage.getItem('token')
+                'Authorization': 'Bearer ' + localStorage.getItem('token')
             },
             method: 'GET',
         }).then(data => data.json())
-            .then(data => { console.log(JSON.stringify(data)); setTasks(JSON.stringify(data)) })
+            .then(data => { setTasks(JSON.stringify(data)); /*setTasks(JSON.stringify(data))*/ })
         
         return false;
     }

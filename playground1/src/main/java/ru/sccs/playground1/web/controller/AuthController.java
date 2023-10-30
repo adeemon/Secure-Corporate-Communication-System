@@ -1,7 +1,11 @@
 package ru.sccs.playground1.web.controller;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +25,7 @@ import ru.sccs.playground1.web.dto.validation.OnCreate;
 import ru.sccs.playground1.web.mapper.UserMapper;
 import ru.sccs.playground1.web.security.JWTUtil;
 
+import java.time.Duration;
 import java.util.Map;
 
 @RestController
@@ -43,12 +48,26 @@ public class AuthController {
     @PostMapping("/login")
 //    @CrossOrigin(origins = "*")
     public Map<String, String> login(/*@Validated @RequestBody JwtRequest loginRequest*/
-    @RequestBody UserCreationDTO userCreationDTO) {
+    @RequestBody UserCreationDTO userCreationDTO, HttpServletResponse response) {
 //        return authService.login(loginRequest);
         log.info(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userCreationDTO.getUsername(), userCreationDTO.getPassword()));
         log.info(authenticate);
-        return Map.of("token", jwtUtil.generateToken(userCreationDTO.getUsername()));
+        String token = jwtUtil.generateToken(userCreationDTO.getUsername());
+        ResponseCookie cookie = ResponseCookie.from("Token", token)
+                .httpOnly(true)
+                .sameSite("Strict")
+                .secure(false)
+                .path("/")
+                .maxAge(86400)
+                .build();
+//        Cookie cookie = new Cookie("token", "token");
+//        cookie.setPath("/");
+//        cookie.setHttpOnly(true);
+//        cookie.setMaxAge(864000);
+//        cookie.setDomain("localhost");
+        response.addHeader("Set-Cookie", cookie.toString());
+        return Map.of("token", token);
 //        return new JwtResponse();
     }
 

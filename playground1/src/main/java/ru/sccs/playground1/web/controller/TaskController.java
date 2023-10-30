@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/api/v1/tasks")
 @RequiredArgsConstructor
 @Log4j2
-@CrossOrigin(origins = "*", allowedHeaders = "*", exposedHeaders = "*")
+@CrossOrigin(origins = "*")
 //@Validated
 public class TaskController {
 
