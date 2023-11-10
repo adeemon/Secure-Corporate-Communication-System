@@ -19,7 +19,7 @@ const Tasks = () => {
         if (!e.isDefaultPrevented()) {
             e.returnValue = false;
         }
-        let response = await fetch("http://localhost/api/v1/tasks", {
+        let response = await fetch("http://localhost:3000/api/v1/tasks", {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('token')
