@@ -1,7 +1,5 @@
 package ru.sccs.playground1.web.controller;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -13,27 +11,19 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import ru.sccs.playground1.domain.user.User;
 import ru.sccs.playground1.repository.UserRepository;
-import ru.sccs.playground1.service.AuthService;
-import ru.sccs.playground1.service.UserService;
-import ru.sccs.playground1.web.dto.auth.JwtRequest;
-import ru.sccs.playground1.web.dto.auth.JwtResponse;
 import ru.sccs.playground1.web.dto.user.UserCreationDTO;
-import ru.sccs.playground1.web.dto.user.UserDTO;
-import ru.sccs.playground1.web.dto.validation.OnCreate;
 import ru.sccs.playground1.web.mapper.UserMapper;
 import ru.sccs.playground1.web.security.JWTUtil;
 
-import java.time.Duration;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/v1/auth")
+@RequestMapping("/auth")
 @RequiredArgsConstructor
 @Validated
 @Log4j2
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 public class AuthController {
 
 //    private final AuthService authService;
@@ -51,11 +41,16 @@ public class AuthController {
     @RequestBody UserCreationDTO userCreationDTO, HttpServletResponse response) {
 //        return authService.login(loginRequest);
         log.info(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        Authentication authenticate = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(userCreationDTO.getUsername(), userCreationDTO.getPassword()));
+        Authentication authenticate = authenticationManager
+                .authenticate(
+                        new UsernamePasswordAuthenticationToken(
+                                userCreationDTO.getUsername(), userCreationDTO.getPassword()
+                        )
+                );
         log.info(authenticate);
         String token = jwtUtil.generateToken(userCreationDTO.getUsername());
         ResponseCookie cookie = ResponseCookie.from("Token", token)
-                .httpOnly(true)
+//                .httpOnly(true)
                 .sameSite("Strict")
                 .secure(false)
                 .path("/")
@@ -73,10 +68,10 @@ public class AuthController {
 
     @PostMapping("/register")
 //    @CrossOrigin(origins = "*")
-    public User register(@RequestBody UserCreationDTO userCreationDTO) {
+    public Long register(@RequestBody UserCreationDTO userCreationDTO) {
         log.info(userCreationDTO);
         userCreationDTO.setPassword(passwordEncoder.encode(userCreationDTO.getPassword()));
-        return userRepository.save(userMapper.toEntity(userCreationDTO));
+        return userRepository.save(userMapper.toEntity(userCreationDTO)).getId();
 //        return jwtUtil.generateToken(userCreationDTO.getUsername());
     }
 

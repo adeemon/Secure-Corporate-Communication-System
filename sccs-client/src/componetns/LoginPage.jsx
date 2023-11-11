@@ -47,15 +47,25 @@ const LoginPage = () => {
 
   const navigate = useNavigate();
   const location = useLocation();
-  const {signin} = useAuth();
+  const { signin } = useAuth();
 
   const fromPage = location.state?.from?.pathname || '/';
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
     const form = event.target;
     const user = form.email.value;
-    signin(user, () => navigate(fromPage, {replace: true}));
+    const password = form.password.value;
+    console.log({ 'username': user, 'password': password });
+    let res = await fetch("http://localhost:3000/auth/login", {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      method: 'POST',
+      body: JSON.stringify({ 'username': user, 'password': password })
+    }).then(data => data.json())
+      .then(data => console.log(JSON.stringify(data)));
+    signin(user, () => navigate(fromPage, { replace: true }));
   }
 
   return (
@@ -63,8 +73,8 @@ const LoginPage = () => {
       <LoginForm onSubmit={handleSubmit}>
         <h2>Вход</h2>
         <h3>{fromPage}</h3>
-        <LoginInput name='email' type="email" placeholder="Email" />
-        <LoginInput type="password" placeholder="Пароль" />
+        <LoginInput name='email' placeholder="Email" />
+        <LoginInput name='password' type="password" placeholder="Пароль" />
         <LoginButton>Войти</LoginButton>
       </LoginForm>
     </LoginPageContainer>

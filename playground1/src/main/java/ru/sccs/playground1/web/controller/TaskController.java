@@ -18,10 +18,10 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/api/v1/tasks")
+@RequestMapping("/tasks")
 @RequiredArgsConstructor
 @Log4j2
-@CrossOrigin(origins = "*")
+//@CrossOrigin(origins = "*")
 //@Validated
 public class TaskController {
 

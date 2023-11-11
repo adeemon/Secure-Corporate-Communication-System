@@ -50,14 +50,32 @@ function RegistrationPage() {
     const navigate = useNavigate();
     const goToLogin = () => navigate('/login', {replace: true});
 
+    const handleSubmit = async (event) => {
+      event.preventDefault();
+      const form = event.target;
+      const user = form.username.value;
+      const password = form.password.value;
+      console.log({ 'username': user, 'password': password });
+      let res = await fetch("http://localhost:3000/auth/register", {
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        method: 'POST',
+        body: JSON.stringify({ 'username': user, 'password': password })
+      }).then(data => data.json())
+        .then(data => console.log(JSON.stringify(data)))
+        .then(() => goToLogin());
+      // signin(user, () => navigate(fromPage, { replace: true }));
+    }
+
   return (
     <RegistrationPageContainer>
-      <RegistrationForm>
+      <RegistrationForm onSubmit={handleSubmit}>
         <h2>Регистрация</h2>
-        <RegistrationInput type="text" placeholder="Имя" />
-        <RegistrationInput type="email" placeholder="Email" />
-        <RegistrationInput type="password" placeholder="Пароль" />
-        <RegistrationButton onClick={goToLogin}>Зарегистрироваться</RegistrationButton>
+        <RegistrationInput name='username' type="text" placeholder="Имя пользователя" />
+        {/* <RegistrationInput type="email" placeholder="Email" /> */}
+        <RegistrationInput name='password' type="password" placeholder="Пароль" />
+        <RegistrationButton>Зарегистрироваться</RegistrationButton>
       </RegistrationForm>
     </RegistrationPageContainer>
   );
