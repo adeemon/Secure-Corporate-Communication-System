@@ -8,7 +8,7 @@ import ru.sccs.playground1.web.dto.user.UserCreationDTO;
 import ru.sccs.playground1.web.mapper.UserMapper;
 
 @RestController
-@RequestMapping("/api/v1/user")
+@RequestMapping("/user")
 @RequiredArgsConstructor
 public class UserController {
 

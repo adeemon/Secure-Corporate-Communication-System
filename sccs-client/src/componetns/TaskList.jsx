@@ -6,14 +6,16 @@ const TaskListContainer = styled.div`
   margin-top: 20px;
 `;
 
-const TaskList = ({ tasks }) => (
-    <TaskListContainer>
-        <h2>Task List</h2>
-        {tasks.map((task) => (
-            <Task key={task.id} task={task} />
-        ))}
-    </TaskListContainer>
-);
+const TaskList = ({ tasks }) => {
+    return (
+        <TaskListContainer>
+            <h2>Task List</h2>
+            {tasks.map((task) => (
+                <Task key={task.id} task={task} />
+            ))}
+        </TaskListContainer>
+    );
+};
 
 export default TaskList;
 

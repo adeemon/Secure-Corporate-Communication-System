@@ -29,8 +29,8 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @JdbcTypeCode(SqlTypes.JSON)
-    @Column(name = "chat_messages")
+    @OneToMany
+    @JoinColumn(name = "task_id")
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
     @ManyToMany

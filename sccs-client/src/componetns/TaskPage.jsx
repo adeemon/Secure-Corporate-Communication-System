@@ -4,6 +4,7 @@ import TaskList from './TaskList';
 import CreateTask from './CreateTask';
 import styled from 'styled-components';
 
+
 const TaskPageContainer = styled.div`
   max-width: 600px;
   margin: 0 auto;
@@ -20,7 +21,6 @@ const TaskPage = () => {
                 .catch((error) => { console.log(error) })
         }, []
     );
-
 
     const handleCreateTask = (newTask) => {
         setTasks([...tasks, { id: tasks.length + 1, ...newTask }]);

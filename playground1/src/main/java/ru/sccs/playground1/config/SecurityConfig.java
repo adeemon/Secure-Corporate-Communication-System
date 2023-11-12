@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
@@ -23,13 +24,7 @@ import ru.sccs.playground1.service.impl.SystemUserDetailsServiceImpl;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
-//    private final ApplicationContext applicationContext;
-//    private final JwtTokenProvider jwtTokenProvider;
-
-//    private final SystemUserDetailsServiceImpl systemUserDetailsService;
-
     private final JWTFilter jwtFilter;
-//    private final PasswordEncoder passwordEncoder;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -44,55 +39,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
-                    .csrf(AbstractHttpConfigurer::disable)
-                    .cors(Customizer.withDefaults())
-                    .httpBasic(AbstractHttpConfigurer::disable)
-                    .sessionManagement(session -> session
-                            .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                    .authorizeHttpRequests(authorize -> authorize
-                            .requestMatchers("/**").permitAll())
-//                    .authorizeHttpRequests(authorize -> authorize
-//                            .requestMatchers("api/v1/user/**").hasAuthority("ROLE_USER"))
-//                    .authorizeHttpRequests(authorize -> authorize
-//                            .requestMatchers("api/v1/admin/**").hasAuthority("ROLE_ADMIN"))
-//                    .authorizeHttpRequests(authorize -> authorize
-//                            .requestMatchers("/api/v1/auth/**", "/swagger-ui/**").permitAll())
-//                    .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
-                    .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
+                .csrf(AbstractHttpConfigurer::disable)
+                .cors(Customizer.withDefaults())
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/auth/**").permitAll())
+                .authorizeHttpRequests(authorize -> authorize
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
-//                .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer
-//                        .authenticationEntryPoint(((request, response, authException) -> {
-//                            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//                            response.getWriter().write("Unauthorized.");
-//                        }))
-//                        .accessDeniedHandler(((request, response, accessDeniedException) -> {
-//                            response.setStatus(HttpStatus.FORBIDDEN.value());
-//                            response.getWriter().write("Forbidden.");
-//                        })))
-//                .anonymous(AbstractHttpConfigurer::disable)
 
-//                .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
-//                .csrf().disable()
-//                .cors()
-//                .and()
-//                .httpBasic().disable()
-//                .sessionManagement()
-//                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-//                .and()
-//                .exceptionHandling()
-//                .authenticationEntryPoint(((request, response, authException) -> {
-//                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
-//                    response.getWriter().write("Unauthorized.");
-//                }))
-//                .accessDeniedHandler(((request, response, accessDeniedException) -> {
-//                    response.setStatus(HttpStatus.FORBIDDEN.value());
-//                    response.getWriter().write("Forbidden.");
-//                }))
-//                .and()
-//                .authorizeHttpRequests()
-//                .requestMatchers("/api/v1/auth").permitAll()
-//                .anyRequest().authenticated()
-//                .and().anonymous().disable()
-//                .addFilterBefore(new JwtTokenFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
     }
 }
