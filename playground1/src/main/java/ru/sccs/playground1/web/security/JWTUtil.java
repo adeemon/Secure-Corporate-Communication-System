@@ -19,7 +19,18 @@ public class JWTUtil {
     private final String subject = "details";
     private final String issuer = "SCCS";
 
-    public String generateToken(String username) {
+    public String generateRefreshToken(String username) {
+        Date expiration = Date.from(ZonedDateTime.now().plusHours(8).toInstant());
+        return JWT.create()
+                .withSubject(subject)
+                .withClaim("username", username)
+                .withIssuedAt(new Date())
+                .withIssuer(issuer)
+                .withExpiresAt(expiration)
+                .sign(Algorithm.HMAC512(secret));
+    }
+
+    public String generateAccessToken(String username) {
         Date expiration = Date.from(ZonedDateTime.now().plusHours(1).toInstant());
         return JWT.create()
                 .withSubject(subject)
@@ -30,7 +41,7 @@ public class JWTUtil {
                 .sign(Algorithm.HMAC512(secret));
     }
 
-    public String validateTokenAndRetriveClaim(String token) throws JWTVerificationException {
+    public String validateTokenAndRetrieveClaim(String token) throws JWTVerificationException {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC512(secret))
                 .withSubject(subject)
                 .withIssuer(issuer)

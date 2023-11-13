@@ -10,7 +10,9 @@ import ru.sccs.playground1.domain.user.User;
 import ru.sccs.playground1.repository.TaskRepository;
 import ru.sccs.playground1.repository.UserRepository;
 import ru.sccs.playground1.service.TaskService;
+import ru.sccs.playground1.web.dto.task.TaskAddAssigneeRequest;
 import ru.sccs.playground1.web.dto.task.TaskCreationDTO;
+import ru.sccs.playground1.web.dto.task.TaskStatusUpdateRequest;
 import ru.sccs.playground1.web.mapper.TaskMapper;
 import ru.sccs.playground1.web.security.SystemUserDetails;
 
@@ -21,8 +23,6 @@ import java.util.stream.Collectors;
 @RequestMapping("/tasks")
 @RequiredArgsConstructor
 @Log4j2
-//@CrossOrigin(origins = "*")
-//@Validated
 public class TaskController {
 
     private final TaskService taskService;
@@ -40,9 +40,8 @@ public class TaskController {
     }
 
     @GetMapping("/{taskId}")
-//    @CrossOrigin(origins = "http://localhost:8080")
     public Task getTaskById(@PathVariable Long taskId) {
-        Task task = taskRepository.findById(taskId).get();
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("no task with id " + taskId));
         log.info(task.getAssignees()
                 .stream()
                 .map(User::toString)
@@ -52,22 +51,26 @@ public class TaskController {
     }
 
     @PostMapping("/createTask")
-//    @CrossOrigin(origins = "http://localhost:8080")
     public Task createTask(@RequestBody TaskCreationDTO taskCreationDTO) {
         return taskRepository.save(taskMapper.toEntity(taskCreationDTO));
     }
 
-    @PutMapping("/{taskId}/addAssignee/{userId}")
-//    @CrossOrigin(origins = "http://localhost:8080")
-    public Task addAssignee(@PathVariable Long taskId, @PathVariable Long userId) {
+    @PutMapping("/{taskId}/updateStatus")
+    public Task updateTaskStatus(@PathVariable Long taskId, @RequestBody TaskStatusUpdateRequest updateRequest) {
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("no task with id " + taskId));
-        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("no user with id " + userId));
+        task.setStatus(updateRequest.getStatus());
+        return taskRepository.save(task);
+    }
+
+    @PutMapping("/{taskId}/addAssignee")
+    public Task addAssignee(@PathVariable Long taskId, @RequestBody TaskAddAssigneeRequest addAssigneeRequest) {
+        Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("no task with id " + taskId));
+        User user = userRepository.findByUsername(addAssigneeRequest.getUsername()).orElseThrow(() -> new IllegalArgumentException("no user with username " + addAssigneeRequest.getUsername()));
         task.getAssignees().add(user);
         return taskRepository.save(task);
     }
 
     @PutMapping("/{taskId}/addMessage")
-//    @CrossOrigin(origins = "http://localhost:8080")
     public Task addMessage(@PathVariable Long taskId, @RequestBody ChatMessage chatMessage) {
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("no task with id " + taskId));
         task.getChatMessages().add(chatMessage);

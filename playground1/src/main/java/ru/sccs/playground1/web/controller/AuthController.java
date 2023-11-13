@@ -23,7 +23,6 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Validated
 @Log4j2
-//@CrossOrigin(origins = "*")
 public class AuthController {
 
 //    private final AuthService authService;
@@ -36,10 +35,8 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-//    @CrossOrigin(origins = "*")
-    public Map<String, String> login(/*@Validated @RequestBody JwtRequest loginRequest*/
+    public String login(/*@Validated @RequestBody JwtRequest loginRequest*/
     @RequestBody UserCreationDTO userCreationDTO, HttpServletResponse response) {
-//        return authService.login(loginRequest);
         log.info(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         Authentication authenticate = authenticationManager
                 .authenticate(
@@ -48,26 +45,21 @@ public class AuthController {
                         )
                 );
         log.info(authenticate);
-        String token = jwtUtil.generateToken(userCreationDTO.getUsername());
-        ResponseCookie cookie = ResponseCookie.from("Token", token)
-//                .httpOnly(true)
+        String refreshToken = jwtUtil.generateRefreshToken(userCreationDTO.getUsername());
+        String accessToken = jwtUtil.generateAccessToken(userCreationDTO.getUsername());
+        ResponseCookie cookie = ResponseCookie.from("refresh_token", refreshToken)
+                .httpOnly(true)
                 .sameSite("Strict")
                 .secure(false)
                 .path("/")
                 .maxAge(86400)
                 .build();
-//        Cookie cookie = new Cookie("token", "token");
-//        cookie.setPath("/");
-//        cookie.setHttpOnly(true);
-//        cookie.setMaxAge(864000);
-//        cookie.setDomain("localhost");
         response.addHeader("Set-Cookie", cookie.toString());
-        return Map.of("token", token);
+        return accessToken;
 //        return new JwtResponse();
     }
 
     @PostMapping("/register")
-//    @CrossOrigin(origins = "*")
     public Long register(@RequestBody UserCreationDTO userCreationDTO) {
         log.info(userCreationDTO);
         userCreationDTO.setPassword(passwordEncoder.encode(userCreationDTO.getPassword()));
