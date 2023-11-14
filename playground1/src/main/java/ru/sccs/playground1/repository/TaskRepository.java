@@ -6,4 +6,5 @@ import ru.sccs.playground1.domain.task.Task;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
+
 }

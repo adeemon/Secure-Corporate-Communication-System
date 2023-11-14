@@ -2,6 +2,7 @@ package ru.sccs.playground1.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import ru.sccs.playground1.domain.task.ChatMessage;
@@ -40,6 +41,7 @@ public class TaskController {
     }
 
     @GetMapping("/{taskId}")
+    @PreAuthorize("@authorizationExpression.canAccessTask(#taskId)")
     public Task getTaskById(@PathVariable Long taskId) {
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("no task with id " + taskId));
         log.info(task.getAssignees()
@@ -51,11 +53,13 @@ public class TaskController {
     }
 
     @PostMapping("/createTask")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Task createTask(@RequestBody TaskCreationDTO taskCreationDTO) {
         return taskRepository.save(taskMapper.toEntity(taskCreationDTO));
     }
 
     @PutMapping("/{taskId}/updateStatus")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Task updateTaskStatus(@PathVariable Long taskId, @RequestBody TaskStatusUpdateRequest updateRequest) {
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("no task with id " + taskId));
         task.setStatus(updateRequest.getStatus());
@@ -63,6 +67,7 @@ public class TaskController {
     }
 
     @PutMapping("/{taskId}/addAssignee")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public Task addAssignee(@PathVariable Long taskId, @RequestBody TaskAddAssigneeRequest addAssigneeRequest) {
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("no task with id " + taskId));
         User user = userRepository.findByUsername(addAssigneeRequest.getUsername()).orElseThrow(() -> new IllegalArgumentException("no user with username " + addAssigneeRequest.getUsername()));
