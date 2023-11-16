@@ -46,10 +46,12 @@ public class SecurityConfig {
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/auth/**").permitAll())
-                .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().authenticated())
+                .authorizeHttpRequests(authorize ->
+                        authorize.anyRequest().permitAll())
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .requestMatchers("/auth/**").permitAll())
+//                .authorizeHttpRequests(authorize -> authorize
+//                        .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
 

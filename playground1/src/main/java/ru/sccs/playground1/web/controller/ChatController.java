@@ -1,13 +1,21 @@
 package ru.sccs.playground1.web.controller;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.util.HtmlUtils;
+import ru.sccs.playground1.domain.task.ChatMessage;
 
 @Controller
+@RequiredArgsConstructor
+@Log4j2
 public class ChatController {
 
 //    @MessageMapping("/chat.sendMessage")
@@ -23,9 +31,13 @@ public class ChatController {
 //        return chatMessage;
 //    }
 
-    @MessageMapping("/hey")
-    @SendTo("/topic/greet")
-    public ChatMessage greeting(ChatMessage message) {
+//    private final SimpMessagingTemplate messagingTemplate;
+
+    @MessageMapping("/taskChat/{taskId}")
+    @SendTo("/topic/taskChat/{taskId}")
+    public String receive(@Payload String message, @DestinationVariable("taskId") String taskId) {
+//        messagingTemplate.convertAndSend("taskChat/task/"+taskId, message);
+        log.info("received" + message);
         return message;
     }
 
