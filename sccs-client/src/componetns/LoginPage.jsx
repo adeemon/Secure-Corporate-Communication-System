@@ -57,14 +57,21 @@ const LoginPage = () => {
     const user = form.email.value;
     const password = form.password.value;
     console.log({ 'username': user, 'password': password });
-    let res = await fetch("http://localhost:3000/auth/login", {
+    await fetch("http://localhost:8080/auth/login", {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Origin': "http://localhost:3000",
       },
       method: 'POST',
       body: JSON.stringify({ 'username': user, 'password': password })
-    }).then(data => data.json())
-      .then(data => console.log(JSON.stringify(data)));
+    })
+      .then(res => res.json())
+      .then(data => sessionStorage.setItem("access_token", data.access_token))
+    // .then(res => console.log(res))
+    // sessionStorage.setItem("access_token", res.json());
+    // .then(res => sessionStorage.setItem("access_token", res.text))
+    // .then(data => console.log(data.body))
+    // .then(data => console.log(JSON.stringify(data)));
     signin(user, () => navigate(fromPage, { replace: true }));
   }
 

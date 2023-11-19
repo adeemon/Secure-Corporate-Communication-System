@@ -9,37 +9,60 @@ const TaskContainer = styled.div`
   margin-bottom: 10px;
 `;
 
-// let socket = new SockJS("/ws");
-//     let stompClient = over(socket);
-//     stompClient.connect({}, frame => {
-//         console.log("connected")
-//         stompClient.subscribe("/topic/greet", greet => {
-//             console.log("1111subscribe")
-//         })
-//     })
-
-
+let stompClient = null;
 
 const Task = ({ task }) => {
 
-  useEffect(() => {
-    const ws = new WebSocket("ws://localhost:3000/ws")
-    ws.onmessage = (e) => {
-      console.log()
-    };
-    
-  });
+    const connect = (event) => {
+        const sock = new SockJS("http://localhost:8080/ws");
+        stompClient = over(sock);
+        stompClient.connect({ }, onConnected, (e) => console.log("err" + e));
+        event.preventDefault();
+    }
 
-  return (
-    <TaskContainer>
-      <h3>{task.title}</h3>
-      <p>{task.description}</p>
-      <p>Status: {task.status}</p>
-      <ul id='messages'>
-        {task.chatMessages.map((msg) => <li>{msg.content}</li>)}
-      </ul>
-    </TaskContainer>
-  );
+    const onConnected = () => {
+        // Subscribe to the Public Topic
+        stompClient.subscribe(`/taskChat.${task.id}`, onMessageReceived);
+
+        // Tell your username to the server
+        stompClient.send(`/app/taskChat.${task.id}.send`,
+            {},
+            JSON.stringify({ sender: "username", type: 'JOIN' })
+        )
+
+    }
+
+    const onMessageReceived = (msg) => {
+        console.log(JSON.parse(msg.body))
+    }
+
+    const send = (event) => {
+        let messageContent = document.getElementById("msg").value;
+
+        // let chatMessage = {
+        //     sender: "username",
+        //     content: messageContent,
+        //     type: 'CHAT'
+        // };
+
+        stompClient.send(`/app/taskChat.${task.id}.send`, {}, JSON.stringify(messageContent));
+
+        event.preventDefault();
+    }
+
+    return (
+        <TaskContainer>
+            <h3>{task.title}</h3>
+            <p>{task.description}</p>
+            <p>Status: {task.status}</p>
+            <ul id='messages'>
+                {task.chatMessages.map((msg) => <li>{msg.content}</li>)}
+            </ul>
+            <input id="msg" placeholder="enter message" />
+            <button type="button" onClick={connect}>connect</button>
+            <button type="button" onClick={send}>send</button>
+        </TaskContainer>
+    );
 };
 
 export default Task;

@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 @RequestMapping("/tasks")
 @RequiredArgsConstructor
 @Log4j2
+//@CrossOrigin(origins = "*", exposedHeaders = "Access-Control-Allow-Origin")
+//@CrossOrigin
 public class TaskController {
 
     private final TaskService taskService;

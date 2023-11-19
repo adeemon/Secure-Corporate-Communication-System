@@ -23,6 +23,8 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Validated
 @Log4j2
+//@CrossOrigin(origins = "*", exposedHeaders = "Access-Control-Allow-Origin")
+//@CrossOrigin(origins = {"http://localhost:3000"})
 public class AuthController {
 
 //    private final AuthService authService;
@@ -35,7 +37,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public String login(/*@Validated @RequestBody JwtRequest loginRequest*/
+    public Map<String, String> login(/*@Validated @RequestBody JwtRequest loginRequest*/
     @RequestBody UserCreationDTO userCreationDTO, HttpServletResponse response) {
         log.info(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         Authentication authenticate = authenticationManager
@@ -55,7 +57,9 @@ public class AuthController {
                 .maxAge(86400)
                 .build();
         response.addHeader("Set-Cookie", cookie.toString());
-        return accessToken;
+//        response.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
+        log.info(accessToken);
+        return Map.of("access_token", accessToken);
 //        return new JwtResponse();
     }
 

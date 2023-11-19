@@ -10,12 +10,15 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.util.HtmlUtils;
 import ru.sccs.playground1.domain.task.ChatMessage;
 
 @Controller
 @RequiredArgsConstructor
 @Log4j2
+//@CrossOrigin(origins = "*", exposedHeaders = "Access-Control-Allow-Origin")
+@CrossOrigin(origins = "http://localhost:3000")
 public class ChatController {
 
 //    @MessageMapping("/chat.sendMessage")
@@ -33,11 +36,11 @@ public class ChatController {
 
 //    private final SimpMessagingTemplate messagingTemplate;
 
-    @MessageMapping("/taskChat/{taskId}")
-    @SendTo("/topic/taskChat/{taskId}")
+    @MessageMapping("/taskChat.{taskId}.send")
+    @SendTo("/taskChat.{taskId}")
     public String receive(@Payload String message, @DestinationVariable("taskId") String taskId) {
 //        messagingTemplate.convertAndSend("taskChat/task/"+taskId, message);
-        log.info("received" + message);
+        log.info("received " + message);
         return message;
     }
 

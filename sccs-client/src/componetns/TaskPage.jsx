@@ -15,10 +15,15 @@ const TaskPage = () => {
 
     useEffect(
         () => {
-            fetch("http://localhost:3000/tasks")
+            fetch("http://localhost:8080/tasks", {
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${sessionStorage.getItem("access_token")}`
+                }
+            })
                 .then(response => response.json())
                 .then(data => { console.log(data); setTasks(data) })
-                .catch((error) => { console.log(error) })
+                // .catch((error) => { console.log(error) })
         }, []
     );
 
@@ -26,7 +31,7 @@ const TaskPage = () => {
         setTasks([...tasks, { id: tasks.length + 1, ...newTask }]);
     };
 
-    console.log(tasks);
+    // console.log(tasks);
 
     return (
         <TaskPageContainer>
