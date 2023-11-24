@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import TaskList from './TaskList';
 import CreateTask from './CreateTask';
 import styled from 'styled-components';
+import { jwtDecode } from 'jwt-decode';
 
 
 const TaskPageContainer = styled.div`
@@ -12,6 +13,10 @@ const TaskPageContainer = styled.div`
 
 const TaskPage = () => {
     const [tasks, setTasks] = useState([]);
+    
+    const [isAdmin, setIsAdmin] = useState(jwtDecode(sessionStorage.getItem("access_token")).authorities === "ROLE_ADMIN");
+
+    // console.log(jwtDecode(sessionStorage.getItem("access_token")).authorities === "ROLE_ADMIN")
 
     useEffect(
         () => {
@@ -23,7 +28,7 @@ const TaskPage = () => {
             })
                 .then(response => response.json())
                 .then(data => { console.log(data); setTasks(data) })
-                // .catch((error) => { console.log(error) })
+            // .catch((error) => { console.log(error) })
         }, []
     );
 
@@ -37,7 +42,7 @@ const TaskPage = () => {
         <TaskPageContainer>
             <h1>Task Management App</h1>
             <TaskList tasks={tasks} />
-            <CreateTask onCreate={handleCreateTask} />
+            {isAdmin ? <CreateTask onCreate={handleCreateTask} /> : null}
         </TaskPageContainer>
     );
 };

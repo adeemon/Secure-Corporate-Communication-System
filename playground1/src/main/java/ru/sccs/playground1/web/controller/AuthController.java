@@ -3,20 +3,26 @@ package ru.sccs.playground1.web.controller;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import ru.sccs.playground1.domain.user.Role;
 import ru.sccs.playground1.repository.UserRepository;
 import ru.sccs.playground1.web.dto.user.UserCreationDTO;
 import ru.sccs.playground1.web.mapper.UserMapper;
 import ru.sccs.playground1.web.security.JWTUtil;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/auth")
@@ -37,8 +43,8 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public Map<String, String> login(/*@Validated @RequestBody JwtRequest loginRequest*/
-    @RequestBody UserCreationDTO userCreationDTO, HttpServletResponse response) {
+    public ResponseEntity<Map<String, String>> login(/*@Validated @RequestBody JwtRequest loginRequest*/
+    @RequestBody UserCreationDTO userCreationDTO) {
         log.info(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
         Authentication authenticate = authenticationManager
                 .authenticate(
@@ -48,18 +54,20 @@ public class AuthController {
                 );
         log.info(authenticate);
         String refreshToken = jwtUtil.generateRefreshToken(userCreationDTO.getUsername());
-        String accessToken = jwtUtil.generateAccessToken(userCreationDTO.getUsername());
+        String accessToken = jwtUtil.generateAccessToken(userCreationDTO.getUsername(), Role.valueOf(authenticate.getAuthorities().stream().toList().get(0).toString()));
         ResponseCookie cookie = ResponseCookie.from("refresh_token", refreshToken)
                 .httpOnly(true)
                 .sameSite("Strict")
-                .secure(false)
+//                .secure(false)
                 .path("/")
                 .maxAge(86400)
                 .build();
-        response.addHeader("Set-Cookie", cookie.toString());
+//        response.addHeader("Set-Cookie", cookie.toString());
 //        response.addHeader("Access-Control-Allow-Origin", "http://localhost:3000");
         log.info(accessToken);
-        return Map.of("access_token", accessToken);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.SET_COOKIE, cookie.toString())
+                .body(Map.of("access_token", accessToken));
 //        return new JwtResponse();
     }
 

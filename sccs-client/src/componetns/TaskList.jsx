@@ -1,6 +1,7 @@
 import React from 'react';
 import Task from './Task';
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const TaskListContainer = styled.div`
   margin-top: 20px;
@@ -9,10 +10,16 @@ const TaskListContainer = styled.div`
 const TaskList = ({ tasks }) => {
     return (
         <TaskListContainer>
-            <h2>Task List</h2>
-            {tasks.map((task) => (
-                <Task key={task.id} task={task} />
-            ))}
+            <ul>
+                <h2>Task List</h2>
+                {tasks.map((task) => (
+                    <li key={task.id}>
+                        <Link to={`/tasks/${task.id}`}>
+                            <Task key={task.id} task={task} />
+                        </Link>
+                    </li>
+                ))}
+            </ul>
         </TaskListContainer>
     );
 };

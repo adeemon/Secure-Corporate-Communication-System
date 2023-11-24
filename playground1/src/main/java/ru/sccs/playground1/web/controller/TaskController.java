@@ -2,6 +2,7 @@ package ru.sccs.playground1.web.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.security.access.prepost.PostAuthorize;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +40,10 @@ public class TaskController {
     @GetMapping
     public List<Task> getAllTasks() {
         log.info(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        return taskRepository.findAll();
+        return taskRepository.findAll().stream()
+                .filter(task -> task.getAssignees().contains(
+                        ((SystemUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser()
+                )).collect(Collectors.toList());
     }
 
     @GetMapping("/{taskId}")

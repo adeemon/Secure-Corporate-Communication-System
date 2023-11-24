@@ -43,42 +43,42 @@ const RegistrationButton = styled.button`
 `;
 
 function RegistrationPage() {
-//     const history = useHistory();
-//     const [registrationData, setRegistrationData] = useState({
-//     // Ваши данные регистрации (имя, email, пароль и т. д.)
-//   });
+    //     const history = useHistory();
+    //     const [registrationData, setRegistrationData] = useState({
+    //     // Ваши данные регистрации (имя, email, пароль и т. д.)
+    //   });
     const navigate = useNavigate();
-    const goToLogin = () => navigate('/login', {replace: true});
+    const goToLogin = () => navigate('/login', { replace: true });
 
     const handleSubmit = async (event) => {
-      event.preventDefault();
-      const form = event.target;
-      const user = form.username.value;
-      const password = form.password.value;
-      console.log({ 'username': user, 'password': password });
-      let res = await fetch("http://localhost:3000/auth/register", {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        method: 'POST',
-        body: JSON.stringify({ 'username': user, 'password': password })
-      }).then(data => data.json())
-        .then(data => console.log(JSON.stringify(data)))
-        .then(() => goToLogin());
-      // signin(user, () => navigate(fromPage, { replace: true }));
+        event.preventDefault();
+        const form = event.target;
+        const user = form.username.value;
+        const password = form.password.value;
+        console.log({ 'username': user, 'password': password });
+        let res = await fetch("http://localhost:3000/auth/register", {
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            method: 'POST',
+            body: JSON.stringify({ 'username': user, 'password': password })
+        }).then(data => data.json())
+            .then(data => console.log(JSON.stringify(data)))
+            .then(() => goToLogin());
+        // signin(user, () => navigate(fromPage, { replace: true }));
     }
 
-  return (
-    <RegistrationPageContainer>
-      <RegistrationForm onSubmit={handleSubmit}>
-        <h2>Регистрация</h2>
-        <RegistrationInput name='username' type="text" placeholder="Имя пользователя" />
-        {/* <RegistrationInput type="email" placeholder="Email" /> */}
-        <RegistrationInput name='password' type="password" placeholder="Пароль" />
-        <RegistrationButton>Зарегистрироваться</RegistrationButton>
-      </RegistrationForm>
-    </RegistrationPageContainer>
-  );
+    return (
+        <RegistrationPageContainer>
+            <RegistrationForm onSubmit={handleSubmit}>
+                <h2>Регистрация</h2>
+                <RegistrationInput name='username' type="text" placeholder="Имя пользователя" />
+                {/* <RegistrationInput type="email" placeholder="Email" /> */}
+                <RegistrationInput name='password' type="password" placeholder="Пароль" />
+                <RegistrationButton>Зарегистрироваться</RegistrationButton>
+            </RegistrationForm>
+        </RegistrationPageContainer>
+    );
 }
 
 export default RegistrationPage;
