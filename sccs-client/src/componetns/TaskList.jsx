@@ -14,9 +14,7 @@ const TaskList = ({ tasks }) => {
                 <h2>Task List</h2>
                 {tasks.map((task) => (
                     <li key={task.id}>
-                        <Link to={`/tasks/${task.id}`}>
-                            <Task key={task.id} task={task} />
-                        </Link>
+                        <Task key={task.id} task={task} />
                     </li>
                 ))}
             </ul>

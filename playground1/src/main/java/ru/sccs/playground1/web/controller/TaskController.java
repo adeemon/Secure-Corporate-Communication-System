@@ -1,5 +1,6 @@
 package ru.sccs.playground1.web.controller;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.access.prepost.PostAuthorize;
@@ -40,10 +41,11 @@ public class TaskController {
     @GetMapping
     public List<Task> getAllTasks() {
         log.info(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
-        return taskRepository.findAll().stream()
-                .filter(task -> task.getAssignees().contains(
-                        ((SystemUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser()
-                )).collect(Collectors.toList());
+        return taskRepository.findAll();
+//        .stream()
+//                .filter(task -> task.getAssignees().contains(
+//                        ((SystemUserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal()).getUser()
+//                )).collect(Collectors.toList());
     }
 
     @GetMapping("/{taskId}")
@@ -74,6 +76,7 @@ public class TaskController {
 
     @PutMapping("/{taskId}/addAssignee")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Transactional
     public Task addAssignee(@PathVariable Long taskId, @RequestBody TaskAddAssigneeRequest addAssigneeRequest) {
         Task task = taskRepository.findById(taskId).orElseThrow(() -> new IllegalArgumentException("no task with id " + taskId));
         User user = userRepository.findByUsername(addAssigneeRequest.getUsername()).orElseThrow(() -> new IllegalArgumentException("no user with username " + addAssigneeRequest.getUsername()));

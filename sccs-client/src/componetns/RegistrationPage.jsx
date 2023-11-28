@@ -43,10 +43,6 @@ const RegistrationButton = styled.button`
 `;
 
 function RegistrationPage() {
-    //     const history = useHistory();
-    //     const [registrationData, setRegistrationData] = useState({
-    //     // Ваши данные регистрации (имя, email, пароль и т. д.)
-    //   });
     const navigate = useNavigate();
     const goToLogin = () => navigate('/login', { replace: true });
 
@@ -65,7 +61,6 @@ function RegistrationPage() {
         }).then(data => data.json())
             .then(data => console.log(JSON.stringify(data)))
             .then(() => goToLogin());
-        // signin(user, () => navigate(fromPage, { replace: true }));
     }
 
     return (

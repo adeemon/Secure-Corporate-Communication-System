@@ -68,11 +68,6 @@ const LoginPage = () => {
         })
             .then(res => res.json())
             .then(data => sessionStorage.setItem("access_token", data.access_token))
-        // .then(res => console.log(res))
-        // sessionStorage.setItem("access_token", res.json());
-        // .then(res => sessionStorage.setItem("access_token", res.text))
-        // .then(data => console.log(data.body))
-        // .then(data => console.log(JSON.stringify(data)));
         signin(user, () => navigate(fromPage, { replace: true }));
     }
 

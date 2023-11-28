@@ -29,11 +29,11 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private Status status;
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "task_id")
     private List<ChatMessage> chatMessages = new ArrayList<>();
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "tasks_users",
             joinColumns = @JoinColumn(name = "task_id"),
