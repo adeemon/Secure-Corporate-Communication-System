@@ -20,16 +20,24 @@ const Task = ({ task }) => {
 
     const [assignees, setAssignees] = useState(task.assignees);
 
-    let users = fetch(`http://localhost:8080/user`, {
-        headers: {
-            'Content-Type': 'application/json',
-            "Authorization": `Bearer ${sessionStorage.getItem("access_token")}`
-        },
-        method: "GET",
-        credentials: "include"
-    })
-        .then(response => response.json());
+    const [users, setUsers] = useState([]);
 
+    const [selectedUserOption, setSelectedUserOption] = useState('');
+
+    const [chatMessages, setChatMessages] = useState(task.chatMessages);
+
+    useEffect(() => {
+        fetch(`http://localhost:8080/user`, {
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${sessionStorage.getItem("access_token")}`
+            },
+            method: "GET",
+            credentials: "include"
+        })
+            .then(response => response.json())
+            .then(data => setUsers(data))
+    }, [users]);
 
     const connect = (event) => {
         const sock = new SockJS("http://localhost:8080/ws");
@@ -91,20 +99,45 @@ const Task = ({ task }) => {
             .then(data => setStatus(data.status))
     };
 
+    const handleSelectChange = (event) => {
+        // event.preventDefault();
+        setSelectedUserOption(event.target.value);
+        console.log(selectedUserOption);
+    };
+
+    const addAssigneeToTask = () => {
+        fetch(`http://localhost:8080/tasks/${task.id}/addAssignee`, {
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${sessionStorage.getItem("access_token")}`
+            },
+            method: "PUT",
+            body: JSON.stringify({ "username": selectedUserOption }),
+            credentials: "include"
+        })
+            .then(response => response.json())
+            .then(data => setAssignees(data.assignees))
+    }
+
     return (
         <TaskContainer>
             <h3>{task.title}</h3>
             <p>{task.description}</p>
             <p>Status: {task.status}</p>
-            <ul id={'messages' + task.id}>
-                {task?.chatMessages?.map((msg) => <li>{msg.content}</li>)}
-            </ul>
             <ul id={'assignees' + task.id}>
-                {task?.assignees?.map(assignee => <li>{assignee.username}</li>)}
+                {task?.assignees?.map(assignee => <li key={assignee.id}>{assignee.username}</li>)}
             </ul>
-            <select name={"assignees" + task.id} id={"assignees" + task.id}>
-                {users?.map(user => <option value={`user${user.id}`}>user.username</option>)}
-            </select>
+            {isAdmin ?
+                <div>
+                    <select name={"assignees" + task.id} id={"assignees" + task.id} onChange={handleSelectChange}>
+                        {users?.map(user => <option key={user.id} value={user.username}>{user.username}</option>)}
+                    </select>
+                    <button type='button' onClick={addAssigneeToTask}>add assignee</button>
+                </div>
+                : null}
+            <ul id={'messages' + task.id}>
+                {chatMessages?.map((msg) => <li key={msg.id}>{msg.content}</li>)}
+            </ul>
             <input id={"msg" + task.id} placeholder="enter message" />
             <button type="button" onClick={connect}>connect</button>
             <button type="button" onClick={send}>send</button>
