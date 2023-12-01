@@ -1,6 +1,5 @@
 package ru.sccs.playground1.web.controller;
 
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import ru.sccs.playground1.domain.user.User;

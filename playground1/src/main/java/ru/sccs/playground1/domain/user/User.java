@@ -2,10 +2,6 @@ package ru.sccs.playground1.domain.user;
 
 import jakarta.persistence.*;
 import lombok.*;
-import ru.sccs.playground1.domain.task.Task;
-
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @Table(name = "users")

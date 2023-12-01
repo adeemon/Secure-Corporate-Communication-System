@@ -1,6 +1,8 @@
 package ru.sccs.playground1.web.mapper;
 
-import org.mapstruct.*;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import ru.sccs.playground1.domain.task.ChatMessage;
 import ru.sccs.playground1.domain.task.Status;
 import ru.sccs.playground1.domain.task.Task;
@@ -11,7 +13,6 @@ import ru.sccs.playground1.web.dto.task.TaskDTO;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 @Mapper
 public interface TaskMapper {

@@ -3,32 +3,23 @@ package ru.sccs.playground1.web.controller;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.messaging.Message;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
-import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.util.HtmlUtils;
 import ru.sccs.playground1.domain.task.ChatMessage;
 import ru.sccs.playground1.domain.task.Task;
 import ru.sccs.playground1.repository.ChatMessageRepository;
 import ru.sccs.playground1.repository.TaskRepository;
-import ru.sccs.playground1.repository.UserRepository;
 
 import java.time.LocalDateTime;
 
 @Controller
 @RequiredArgsConstructor
 @Log4j2
-//@CrossOrigin(origins = "*", exposedHeaders = "Access-Control-Allow-Origin")
-@CrossOrigin(origins = "http://localhost:3000")
 public class ChatController {
 
-    private final UserRepository userRepository;
     private final TaskRepository taskRepository;
     private final ChatMessageRepository chatMessageRepository;
 
@@ -55,7 +46,11 @@ public class ChatController {
         log.info("received " + message);
         Task task = taskRepository.findById(Long.valueOf(taskId))
                 .orElseThrow(() -> new IllegalArgumentException("task not found"));
-        ChatMessage msg = ChatMessage.builder().content(message).sentAt(LocalDateTime.now().toString()).senderId(1L).build();
+        ChatMessage msg = ChatMessage.builder()
+                .content(message)
+                .sentAt(LocalDateTime.now().toString())
+                .senderId(1L)
+                .build();
         task.getChatMessages().add(msg);
         chatMessageRepository.save(msg);
         log.info(task.getChatMessages());

@@ -52,7 +52,7 @@ function RegistrationPage() {
         const user = form.username.value;
         const password = form.password.value;
         console.log({ 'username': user, 'password': password });
-        let res = await fetch("http://localhost:3000/auth/register", {
+        let res = await fetch("http://localhost:8080/auth/register", {
             headers: {
                 'Content-Type': 'application/json'
             },

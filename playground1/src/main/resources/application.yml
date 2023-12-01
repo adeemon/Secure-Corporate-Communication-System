@@ -1,9 +1,3 @@
-server:
-  servlet:
-    session:
-      cookie:
-        same-site: strict
-
 spring:
   datasource:
     url: jdbc:postgresql://ep-weathered-math-909876.us-east-2.aws.neon.tech/sccs
@@ -16,7 +10,7 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
 #    show-sql: true
 #    properties:
 #      hibernate:
@@ -25,15 +19,3 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 jwt_secret: aisderhoo
-
-#  sql:
-#    init:
-#      mode: always
-#      continue-on-error: false
-#      data-locations: classpath:demo_data.sql
-
-#security:
-#  jwt:
-#    secret: YXdmYWd3Z3J3YnN0bnNybmVyaGFlcmhlcmhhZTVqNXFBRVI1RUpOVDY=
-#    access: 3600000
-#    refresh: 2592000000

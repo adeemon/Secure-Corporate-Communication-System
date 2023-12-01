@@ -2,8 +2,6 @@ package ru.sccs.playground1.domain.task;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 import ru.sccs.playground1.domain.user.User;
 
 import java.util.ArrayList;

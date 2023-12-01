@@ -12,7 +12,7 @@ const TaskContainer = styled.div`
 
 let stompClient = null;
 
-const Task = ({ task }) => {
+const Task = ({ task, users }) => {
 
     const [isAdmin, setIsAdmin] = useState(jwtDecode(sessionStorage.getItem("access_token")).authorities === "ROLE_ADMIN");
 
@@ -20,24 +20,9 @@ const Task = ({ task }) => {
 
     const [assignees, setAssignees] = useState(task.assignees);
 
-    const [users, setUsers] = useState([]);
-
     const [selectedUserOption, setSelectedUserOption] = useState('');
 
     const [chatMessages, setChatMessages] = useState(task.chatMessages);
-
-    useEffect(() => {
-        fetch(`http://localhost:8080/user`, {
-            headers: {
-                'Content-Type': 'application/json',
-                "Authorization": `Bearer ${sessionStorage.getItem("access_token")}`
-            },
-            method: "GET",
-            credentials: "include"
-        })
-            .then(response => response.json())
-            .then(data => setUsers(data))
-    }, [users]);
 
     const connect = (event) => {
         const sock = new SockJS("http://localhost:8080/ws");
@@ -86,6 +71,7 @@ const Task = ({ task }) => {
     };
 
     const setDoneStatus = () => {
+        task.status = "DONE";
         fetch(`http://localhost:8080/tasks/${task.id}/updateStatus`, {
             headers: {
                 'Content-Type': 'application/json',
@@ -144,7 +130,7 @@ const Task = ({ task }) => {
             {isAdmin ?
                 <div>
                     <button type="button" onClick={setInProgressStatus}>in progress</button>
-                    <button type="button" onClick={setDoneStatus}>done</button>
+                    <button type="button" onClick={() => setDoneStatus()}>done</button>
                 </div>
                 : null}
         </TaskContainer>

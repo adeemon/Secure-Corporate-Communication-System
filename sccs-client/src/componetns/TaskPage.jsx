@@ -20,6 +20,8 @@ const StatusColumn = styled(Grid)`
 const TaskPage = () => {
     const [tasks, setTasks] = useState([]);
 
+    const [users, setUsers] = useState([]);
+
     const [isAdmin, setIsAdmin] = useState(jwtDecode(sessionStorage.getItem("access_token")).authorities === "ROLE_ADMIN");
 
     useEffect(
@@ -31,9 +33,20 @@ const TaskPage = () => {
                 }
             })
                 .then(response => response.json())
-                .then(data => { console.log(data); setTasks(data) })
+                .then(data => { console.log(data); setTasks(data) });
             // .catch((error) => { console.log(error) })
-        }, []
+            fetch(`http://localhost:8080/user`, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    "Authorization": `Bearer ${sessionStorage.getItem("access_token")}`
+                },
+                method: "GET",
+                credentials: "include"
+            })
+                .then(response => response.json())
+                .then(data => setUsers(data));
+        },
+        []
     );
 
     const handleCreateTask = (newTask) => {
@@ -57,19 +70,19 @@ const TaskPage = () => {
                 <StatusColumn item xs={4}>
                     <Paper elevation={3}>
                         <h2>To Do</h2>
-                        <TaskList tasks={tasks.filter(task => task.status === 'TODO')} />
+                        <TaskList tasks={tasks.filter(task => task.status === 'TODO')} users={users}/>
                     </Paper>
                 </StatusColumn>
                 <StatusColumn item xs={4}>
                     <Paper elevation={3}>
                         <h2>In Progress</h2>
-                        <TaskList tasks={tasks.filter(task => task.status === 'IN_PROGRESS')} />
+                        <TaskList tasks={tasks.filter(task => task.status === 'IN_PROGRESS')} users={users}/>
                     </Paper>
                 </StatusColumn>
                 <StatusColumn item xs={4}>
                     <Paper elevation={3}>
                         <h2>Done</h2>
-                        <TaskList tasks={tasks.filter(task => task.status === 'DONE')} />
+                        <TaskList tasks={tasks.filter(task => task.status === 'DONE')} users={users}/>
                     </Paper>
                 </StatusColumn>
             </Grid>
