@@ -10,14 +10,9 @@ const TaskListContainer = styled.div`
 const TaskList = ({ tasks, users }) => {
     return (
         <TaskListContainer>
-            <ul>
-                <h2>Task List</h2>
-                {tasks.map((task) => (
-                    <li key={task.id}>
-                        <Task key={task.id} task={task} users={users}/>
-                    </li>
-                ))}
-            </ul>
+            {tasks.map((task) => (
+                <Task key={task.id} task={task} users={users}/>
+            ))}
         </TaskListContainer>
     );
 };

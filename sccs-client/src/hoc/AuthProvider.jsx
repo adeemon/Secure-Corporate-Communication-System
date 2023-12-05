@@ -1,4 +1,5 @@
 import { createContext, useState } from 'react';
+import {getTasks} from "../api/tasks";
 
 export const AuthContext = createContext(null);
 
@@ -12,6 +13,10 @@ export const AuthProvider = ({ children }) => {
     const signout = (cb) => {
         setUser(null);
         cb();
+    }
+
+    if (sessionStorage.getItem('access_token')) {
+        getTasks();
     }
 
     const value = { user, signin, signout }
