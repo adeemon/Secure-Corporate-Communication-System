@@ -10,6 +10,7 @@ import {useTaskStore} from "../stores/useTaskStore";
 import {getTasks} from "../api/tasks";
 import {Button, Col, Row} from "react-bootstrap";
 import {ModalAddTask} from "./ModalAddTask/ModalAddTask";
+import { ModalTask } from './ModalTask/ModalTask';
 
 
 const TaskPageContainer = styled.div`
@@ -70,7 +71,7 @@ const TaskPage = () => {
     };
 
     const [open, setOpen] = useState(false);
-
+    const [openModal, setOpenModal] = useTaskStore((state) => [state.openModal, state.setOpenModal])
     const cols = ['TODO', 'IN_PROGRESS', 'DONE'];
 
     return (
