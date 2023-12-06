@@ -5,6 +5,7 @@ import SockJS from 'sockjs-client';
 import { over } from 'stompjs';
 import { setDoneStatus, setInProgressStatus } from "../../api/tasks.js";
 import connectToWebSocket from "./ConnectToWebSocket.js";
+import { jwtDecode } from "jwt-decode";
 
 
 // let stompClient = null;
@@ -53,7 +54,11 @@ export const ModalTask = ({users, chatMessages, isAdmin, task, open, setOpen}) =
     const send = (event) => {
         let messageContent = document.getElementById("msg" + task.id).value;
 
-        stompClient.send(`/app/taskChat.${task.id}.send`, {}, JSON.stringify(messageContent));
+        let userId = jwtDecode(sessionStorage.getItem("access_token")).id;
+
+        console.log(userId);
+
+        stompClient.send(`/app/taskChat.${task.id}.send`, {}, JSON.stringify({id: userId, message: messageContent}));
 
         event.preventDefault();
     }

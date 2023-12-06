@@ -43,8 +43,9 @@ public class AuthController {
                         )
                 );
         log.info(authenticate);
+        Long id = userRepository.findByUsername(userCreationDTO.getUsername()).orElseThrow(() -> new IllegalArgumentException("no username")).getId();
         String refreshToken = jwtUtil.generateRefreshToken(userCreationDTO.getUsername());
-        String accessToken = jwtUtil.generateAccessToken(userCreationDTO.getUsername(), Role.valueOf(authenticate.getAuthorities().stream().toList().get(0).toString()));
+        String accessToken = jwtUtil.generateAccessToken(id, userCreationDTO.getUsername(), Role.valueOf(authenticate.getAuthorities().stream().toList().get(0).toString()));
         ResponseCookie cookie = ResponseCookie.from("refresh_token", refreshToken)
                 .httpOnly(true)
                 .sameSite("Strict")

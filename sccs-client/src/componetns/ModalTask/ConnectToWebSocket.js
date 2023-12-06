@@ -24,7 +24,7 @@ const connectToWebSocket = (id) => {
     }
 
     const onMessageReceived = (msg) => {
-        console.log(JSON.parse(msg.body))
+        console.log(msg.body)
     }
 
     return stompClient;

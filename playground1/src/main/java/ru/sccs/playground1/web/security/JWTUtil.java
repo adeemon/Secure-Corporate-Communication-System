@@ -31,10 +31,11 @@ public class JWTUtil {
                 .sign(Algorithm.HMAC512(secret));
     }
 
-    public String generateAccessToken(String username, Role role) {
+    public String generateAccessToken(Long id, String username, Role role) {
         Date expiration = Date.from(ZonedDateTime.now().plusHours(1).toInstant());
         return JWT.create()
                 .withSubject(subject)
+                .withClaim("id", id)
                 .withClaim("username", username)
                 .withClaim("authorities", role.name())
                 .withIssuedAt(new Date())

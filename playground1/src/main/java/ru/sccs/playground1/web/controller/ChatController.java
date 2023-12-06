@@ -1,5 +1,7 @@
 package ru.sccs.playground1.web.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -41,22 +43,24 @@ public class ChatController {
     @MessageMapping("/taskChat.{taskId}.send")
     @SendTo("/taskChat.{taskId}")
     @Transactional
-    public String receive(@Payload String message, @DestinationVariable("taskId") String taskId) {
+    public String receive(@Payload String message, @DestinationVariable("taskId") String taskId) throws JsonProcessingException {
 //        messagingTemplate.convertAndSend("taskChat/task/"+taskId, message);
         log.info("received " + message);
         Task task = taskRepository.findById(Long.valueOf(taskId))
                 .orElseThrow(() -> new IllegalArgumentException("task not found"));
+        var mapper = new ObjectMapper();
+        ClientMessage clientMessage = mapper.readValue(message, ClientMessage.class);
         ChatMessage msg = ChatMessage.builder()
-                .content(message)
+                .content(clientMessage.getMessage())
                 .sentAt(LocalDateTime.now().toString())
-                .senderId(1L)
+                .senderId(clientMessage.getId())
                 .build();
         task.getChatMessages().add(msg);
         chatMessageRepository.save(msg);
         log.info(task.getChatMessages());
         log.info(msg);
         taskRepository.save(task);
-        return message;
+        return clientMessage.getMessage();
     }
 
 }
