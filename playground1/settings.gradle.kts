@@ -1,1 +1,1 @@
-rootProject.name = "playground1"
+rootProject.name = "sccs-server"
