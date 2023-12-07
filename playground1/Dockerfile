@@ -5,5 +5,5 @@ RUN ./gradlew clean build --no-daemon
 
 FROM openjdk:17-jdk-slim
 WORKDIR /app
-COPY --from=builder /app/build/libs/playground1-0.0.1-SNAPSHOT.jar /app/playground1-0.0.1-SNAPSHOT.jar
-ENTRYPOINT ["java", "-jar", "/app/playground1-0.0.1-SNAPSHOT.jar"]
+COPY --from=builder /app/build/libs/sccs-server-0.0.1-SNAPSHOT.jar /app/sccs-server-0.0.1-SNAPSHOT.jar
+ENTRYPOINT ["java", "-jar", "/app/sccs-server-0.0.1-SNAPSHOT.jar"]

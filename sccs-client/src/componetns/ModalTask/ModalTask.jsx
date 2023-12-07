@@ -93,8 +93,8 @@ export const ModalTask = ({users, chatMessages, isAdmin, task, open, setOpen}) =
     }
     
     return (
-        <Modal show={open} onHide={() => setOpen(false)}>
-            <ModalHeader closeButton>
+        <Modal show={open} onHide={setOpen}>
+            <ModalHeader closeButton data-bs-dismiss>
                 <h3>{task?.title}</h3>
             </ModalHeader>
             <ModalBody>
