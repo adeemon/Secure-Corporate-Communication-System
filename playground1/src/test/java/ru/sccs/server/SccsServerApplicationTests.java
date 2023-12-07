@@ -1,4 +1,4 @@
-package ru.sccs.playground1;
+package ru.sccs.server;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
