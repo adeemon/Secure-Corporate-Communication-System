@@ -32,9 +32,20 @@ const Task = ({ task, users }) => {
 
     const [open, setOpen] = useState(false);
 
+    const handleShow = async () => { 
+        setOpen(true);
+        // setTimeout(() => setOpen(false), 500);
+    }
+
+    const handleClose = () => {
+        console.log(open);
+        setTimeout(setOpen, 100, false); 
+        console.log(open);
+    }
+
     return (
-        <TaskContainer onClick={() => setOpen(true)} className={'d-flex align-items-center justify-content-center'}>
-            <ModalTask open={open} setOpen={setOpen} task={task} isAdmin={isAdmin}/>
+        <TaskContainer onClick={handleShow} className={'d-flex align-items-center justify-content-center'}>
+            <ModalTask open={open} setOpen={setOpen} handleClose={handleClose} task={task} isAdmin={isAdmin}/>
             {loader ? <div className={'position-absolute'}>
                 <Loader />
             </div> : <></>}

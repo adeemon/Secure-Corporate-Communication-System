@@ -1,4 +1,4 @@
-import { Modal, ModalBody, ModalFooter, ModalHeader, Button, Row, Col } from "react-bootstrap"
+import { Modal, ModalBody, ModalFooter, ModalHeader, Button, Row, Col, CloseButton } from "react-bootstrap"
 import Loader from "../Loader/Loader.tsx"
 import { useEffect, useState } from "react";
 import SockJS from 'sockjs-client';
@@ -10,7 +10,7 @@ import { jwtDecode } from "jwt-decode";
 
 // let stompClient = null;
 // let sock = null;
-export const ModalTask = ({users, chatMessages, isAdmin, task, open, setOpen}) => {
+export const ModalTask = ({ users, chatMessages, isAdmin, task, open, setOpen, handleClose}) => {
 
     const [loader, setLoader] = useState(false);
 
@@ -58,7 +58,7 @@ export const ModalTask = ({users, chatMessages, isAdmin, task, open, setOpen}) =
 
         console.log(userId);
 
-        stompClient.send(`/app/taskChat.${task.id}.send`, {}, JSON.stringify({id: userId, message: messageContent}));
+        stompClient.send(`/app/taskChat.${task.id}.send`, {}, JSON.stringify({ id: userId, message: messageContent }));
 
         event.preventDefault();
     }
@@ -91,15 +91,23 @@ export const ModalTask = ({users, chatMessages, isAdmin, task, open, setOpen}) =
             setLoader(await setInProgressStatus(task.id));
         }
     }
-    
+
+    // const handleClose = () => {
+    //     console.log("handle close", open);
+    //     setOpen(false);
+    //     console.log(open);
+    // }
+
     return (
-        <Modal show={open} onHide={setOpen}>
-            <ModalHeader closeButton data-bs-dismiss>
+        <Modal show={open} onHide={handleClose}>
+            <ModalHeader>
                 <h3>{task?.title}</h3>
+                <CloseButton onClick={handleClose}/>
             </ModalHeader>
             <ModalBody>
-            <p>{task?.description}</p>
-            <p>Status: {task?.status}</p>
+                <p>{open ? "true": "false"}</p>
+                <p>{task?.description}</p>
+                <p>Status: {task?.status}</p>
                 <ul id={'assignees' + task?.id}>
                     {task?.assignees?.map(assignee => <li key={assignee?.id}>{assignee.username}</li>)}
                 </ul>
