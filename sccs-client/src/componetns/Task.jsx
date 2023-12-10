@@ -39,7 +39,8 @@ const Task = ({ task, users }) => {
 
     const handleClose = () => {
         console.log(open);
-        setTimeout(setOpen, 100, false); 
+        setTimeout(setOpen, 100, false);
+        // setOpen(false);
         console.log(open);
     }
 
