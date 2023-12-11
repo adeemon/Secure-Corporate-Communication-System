@@ -1,7 +1,7 @@
-import React from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import { useAuth } from '../hook/useAuth';
+import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { useAuth } from "../hook/useAuth";
 
 const LoginPageContainer = styled.div`
   display: flex;
@@ -44,44 +44,45 @@ const LoginButton = styled.button`
 `;
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { signin } = useAuth();
 
-    const navigate = useNavigate();
-    const location = useLocation();
-    const { signin } = useAuth();
+  const fromPage = location.state?.from?.pathname || "/";
 
-    const fromPage = location.state?.from?.pathname || '/';
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const form = event.target;
+    const user = form.email.value;
+    const password = form.password.value;
+    console.log({ username: user, password: password });
+    await fetch("http://localhost:8080/auth/login", {
+      headers: {
+        "Content-Type": "application/json",
+        Origin: "http://localhost:3000",
+      },
+      method: "POST",
+      credentials: "include",
+      body: JSON.stringify({ username: user, password: password }),
+    })
+      .then((res) => res.json())
+      .then((data) =>
+        sessionStorage.setItem("access_token", data.access_token)
+      );
+    signin(user, () => navigate(fromPage, { replace: true }));
+  };
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        const form = event.target;
-        const user = form.email.value;
-        const password = form.password.value;
-        console.log({ 'username': user, 'password': password });
-        await fetch("http://localhost:8080/auth/login", {
-            headers: {
-                'Content-Type': 'application/json',
-                'Origin': "http://localhost:3000",
-            },
-            method: 'POST',
-            credentials: "include",
-            body: JSON.stringify({ 'username': user, 'password': password })
-        })
-            .then(res => res.json())
-            .then(data => sessionStorage.setItem("access_token", data.access_token))
-        signin(user, () => navigate(fromPage, { replace: true }));
-    }
-
-    return (
-        <LoginPageContainer>
-            <LoginForm onSubmit={handleSubmit}>
-                <h2>Вход</h2>
-                <h3>{fromPage}</h3>
-                <LoginInput name='email' placeholder="Email" />
-                <LoginInput name='password' type="password" placeholder="Пароль" />
-                <LoginButton>Войти</LoginButton>
-            </LoginForm>
-        </LoginPageContainer>
-    );
-}
+  return (
+    <LoginPageContainer>
+      <LoginForm onSubmit={handleSubmit}>
+        <h2>Вход</h2>
+        <h3>{fromPage}</h3>
+        <LoginInput name="email" placeholder="Email" />
+        <LoginInput name="password" type="password" placeholder="Пароль" />
+        <LoginButton>Войти</LoginButton>
+      </LoginForm>
+    </LoginPageContainer>
+  );
+};
 
 export default LoginPage;
