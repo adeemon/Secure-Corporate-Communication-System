@@ -10,7 +10,7 @@ import { jwtDecode } from "jwt-decode";
 
 // let stompClient = null;
 // let sock = null;
-export const ModalTask = ({ users, chatMessages, setChatMessages, isAdmin, task, open, setOpen, handleClose}) => {
+export const ModalTask = ({ users, chatMessages, isAdmin, task, open, setOpen, handleClose}) => {
 
     const [loader, setLoader] = useState(false);
 
@@ -21,8 +21,10 @@ export const ModalTask = ({ users, chatMessages, setChatMessages, isAdmin, task,
 
     useEffect(() => {
         console.log(task);
-        const stomp = connectToWebSocket(task.id, chatMessages, setChatMessages);
-        setStompClient(stomp);
+        if (open) {
+            const stomp = connectToWebSocket(task.id);
+            setStompClient(stomp);
+        }
         // sock = new SockJS("http://localhost:8080/ws");
         // stompClient = over(sock);
         // stompClient.connect({}, onConnected, (e) => console.log("err" + e));
