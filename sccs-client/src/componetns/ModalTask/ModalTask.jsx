@@ -21,8 +21,10 @@ export const ModalTask = ({ users, chatMessages, isAdmin, task, open, setOpen, h
 
     useEffect(() => {
         console.log(task);
-        const stomp = connectToWebSocket(task.id);
-        setStompClient(stomp);
+        if (open) {
+            const stomp = connectToWebSocket(task.id);
+            setStompClient(stomp);
+        }
         // sock = new SockJS("http://localhost:8080/ws");
         // stompClient = over(sock);
         // stompClient.connect({}, onConnected, (e) => console.log("err" + e));
