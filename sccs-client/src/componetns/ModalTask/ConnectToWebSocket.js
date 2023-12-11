@@ -29,7 +29,7 @@ const connectToWebSocket = (id, chatMessages, setChatMessages) => {
 
     const onMessageReceived = (msg) => {
         console.log(msg.body)
-        setChatMessages((prevMessages) => [...prevMessages, msg.body])
+        setChatMessages((chatMessages) => [...chatMessages, msg.body])
     }
 
     return stompClient;
