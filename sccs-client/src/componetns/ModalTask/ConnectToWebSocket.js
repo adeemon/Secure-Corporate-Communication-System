@@ -1,15 +1,14 @@
 import SockJS from "sockjs-client";
 import { over } from 'stompjs';
 
-const connectToWebSocket = (id) => {
+const connectToWebSocket = (id, chatMessages, setChatMessages) => {
     const socket = new SockJS('http://localhost:8080/ws');
 
     const stompClient = over(socket);
 
     console.log(id);
 
-    stompClient.connect({}, () => {stompClient.subscribe(`/taskChat.${id}`, onMessageReceived);}, (e) => {});
-    // stompClient.subscribe(`/taskChat.${id}`, () => console.log("subscribed"));
+    // () => {stompClient.subscribe(`/taskChat.${id}`
 
     const onConnected = () => {
         // Subscribe to the Public Topic
@@ -23,8 +22,14 @@ const connectToWebSocket = (id) => {
 
     }
 
+    stompClient.connect({}, onConnected, (e) => {});
+    // stompClient.subscribe(`/taskChat.${id}`, () => console.log("subscribed"));
+
+    
+
     const onMessageReceived = (msg) => {
         console.log(msg.body)
+        setChatMessages((prevMessages) => [...prevMessages, msg.body])
     }
 
     return stompClient;

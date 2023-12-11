@@ -46,10 +46,13 @@ const Task = ({ task, users }) => {
 
     return (
         <TaskContainer onClick={handleShow} className={'d-flex align-items-center justify-content-center'}>
-            <ModalTask open={open} setOpen={setOpen} handleClose={handleClose} task={task} isAdmin={isAdmin}/>
+            <ModalTask open={open} setOpen={setOpen} chatMessages={chatMessages} setChatMessages={setChatMessages} users={users} handleClose={handleClose} task={task} isAdmin={isAdmin}/>
             {loader ? <div className={'position-absolute'}>
                 <Loader />
             </div> : <></>}
+            {/* <ul id={'messages' + task?.id}>
+                    {chatMessages?.map((msg) => <li key={msg?.id}>{msg?.content}</li>)}
+                </ul> */}
             <div className={loader ? 'opacity-50 w-100' : 'w-100'}>
                 <h3>{task?.title}</h3>
                 {/* <p>{task?.description}</p> */}
