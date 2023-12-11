@@ -48,16 +48,20 @@ const LoginPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { signin } = useAuth();
+    const [isLogged, setIsLogged] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
     const fromPage = location.state?.from?.pathname || '/';
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+        setIsLogged(true);
         const form = event.target;
         const user = form.email.value;
         const password = form.password.value;
         console.log({ 'username': user, 'password': password });
-        await fetch("http://localhost:8080/auth/login", {
+        try {
+          await fetch("http://localhost:8080/auth/login", {
             headers: {
                 'Content-Type': 'application/json',
                 'Origin': "http://localhost:3000",
@@ -68,7 +72,11 @@ const LoginPage = () => {
         })
             .then(res => res.json())
             .then(data => sessionStorage.setItem("access_token", data.access_token))
-        signin(user, () => navigate(fromPage, { replace: true }));
+        } catch (error) {
+          console.log(error);
+          setIsLogged(false)
+        }
+        isLogged && signin(user, () => navigate(fromPage, { replace: true }));
     }
 
     return (
