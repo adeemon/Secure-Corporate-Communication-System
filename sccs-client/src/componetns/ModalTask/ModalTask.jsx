@@ -16,13 +16,13 @@ export const ModalTask = ({ users, chatMessages, setChatMessages, isAdmin, task,
 
     const [selectedUserOption, setSelectedUserOption] = useState('');
     const [assignees, setAssignees] = useState(task.assignees);
-
+    const [chat, setChat] = useState(chatMessages);
     const [stompClient, setStompClient] = useState(null);
 
     useEffect(() => {
         console.log(task);
         if (open) {
-            const stomp = connectToWebSocket(task.id, chatMessages, setChatMessages);
+            const stomp = connectToWebSocket(task.id, chatMessages, (chatMessages) => setChat(chatMessages);
             setStompClient(stomp);
         }
         // sock = new SockJS("http://localhost:8080/ws");
@@ -129,7 +129,7 @@ export const ModalTask = ({ users, chatMessages, setChatMessages, isAdmin, task,
                     </div>
                     : null}
                 <ul id={'messages' + task?.id}>
-                    {chatMessages?.map((msg) => <li key={msg?.id}>{msg?.content}</li>)}
+                    {chat?.map((msg) => <li key={msg?.id}>{msg?.content}</li>)}
                 </ul>
                 <input id={"msg" + task?.id} placeholder="enter message" />
                 <Row className={'p-2 gap-3 justify-content-center'}>
