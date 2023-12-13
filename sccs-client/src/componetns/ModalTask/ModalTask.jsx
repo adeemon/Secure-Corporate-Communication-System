@@ -28,8 +28,11 @@ export const ModalTask = ({ users, chatMessages, setChatMessages, isAdmin, task,
         // sock = new SockJS("http://localhost:8080/ws");
         // stompClient = over(sock);
         // stompClient.connect({}, onConnected, (e) => console.log("err" + e));
+        return () => {
+            stompClient.close();
+        }
     }, [open]);
-
+    
     // const connect = (event) => {
     //     const sock = new SockJS("http://localhost:8080/ws");
     //     stompClient = over(sock);
