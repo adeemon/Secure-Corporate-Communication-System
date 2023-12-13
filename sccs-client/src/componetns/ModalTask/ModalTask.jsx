@@ -30,6 +30,10 @@ export const ModalTask = ({ users, chatMessages, setChatMessages, isAdmin, task,
         // stompClient.connect({}, onConnected, (e) => console.log("err" + e));
     }, [open]);
 
+    useEffect(() => {
+        console.log('Перерисорвка');
+    };
+    
     // const connect = (event) => {
     //     const sock = new SockJS("http://localhost:8080/ws");
     //     stompClient = over(sock);
