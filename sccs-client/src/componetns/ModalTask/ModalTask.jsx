@@ -129,7 +129,7 @@ export const ModalTask = ({ users, chatMessages, setChatMessages, isAdmin, task,
                     </div>
                     : null}
                 <ul id={'messages' + task?.id}>
-                    {chatMessages?.map((msg) => <li key={msg?.id}>{msg?.content}</li>)}
+                    {chatMessages?.map((msg) => <li key={msg?.id}>{msg?.content || msg?.message}</li>)}
                 </ul>
                 <input id={"msg" + task?.id} placeholder="enter message" />
                 <Row className={'p-2 gap-3 justify-content-center'}>
