@@ -14,6 +14,9 @@ import { ModalTask } from "./ModalTask/ModalTask";
 
 const TaskPageContainer = styled.div`
   //max-width: 900px;
+  display: flex;
+  flex-direction: column:
+  gap: 20px;
   margin: 0 auto;
   padding: 20px;
 `;
